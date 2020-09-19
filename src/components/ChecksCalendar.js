@@ -34,55 +34,111 @@ const useStyles = makeStyles({
     },
 })
 
-function ChecksLine({ name, data }) {
-    const classes = useStyles()
-    const [checksCount, setChecksCount] = useState(0)
-    const [width, setWidth] = useState(0)
+class ChecksLine extends React.Component {
+    constructor() {
+        super()
 
-    const svgEl = useCallback((node) => {
+        this.state = {
+            checksCount: 0,
+            width: 0,
+        }
+        this.resizeListener = null
+    }
+
+    resizeSvg = (node) => {
         if (node !== null) {
             const _width = node.getBoundingClientRect().width
             const _checksCount = Math.floor(_width / 32)
-            setWidth(_width)
-            setChecksCount(_checksCount)
+            this.setState({
+                width: _width,
+                checksCount: _checksCount,
+            })
+
+            if (this.resizeListener !== null) {
+                window.removeEventListener(this.resizeListener)
+            }
+
+            this.resizeListener = window.addEventListener("resize", () => {
+                const _width = node.getBoundingClientRect().width
+                const _checksCount = Math.floor(_width / 32)
+                this.setState({
+                    width: _width,
+                    checksCount: _checksCount,
+                })
+            })
         }
-    }, [])
+    }
 
-    return (
-        <div className={classes.line}>
-            <span className={classes.tag}>{name}</span>
-            <svg height="32" className={classes.checksLine} ref={svgEl}>
-                {[...Array(checksCount)].map((x, i) => {
-                    const day = moment().subtract(i, "day").format("Y-M-D")
+    componentWillUnmount() {
+        if (this.resizeListener !== null) {
+            window.removeEventListener(this.resizeListener)
+        }
+    }
 
-                    return (
-                        <rect
-                            key={i}
-                            width="22"
-                            height="22"
-                            x={(width - (i + 1) * 32).toString()}
-                            y="5"
-                            fill={!!data[day] ? "blue" : "grey"}
-                            rx="4px"
-                            onClick={() => alert(day)}
-                        />
-                    )
-                })}
-            </svg>
-        </div>
-    )
+    render() {
+        const { classes, data, name, toggleCheck } = this.props
+        const { checksCount, width } = this.state
+
+        return (
+            <div className={classes.line}>
+                <span className={classes.tag}>{name}</span>
+                <svg
+                    height="32"
+                    className={classes.checksLine}
+                    ref={this.resizeSvg}
+                >
+                    {[...Array(checksCount)].map((x, i) => {
+                        const day = moment().subtract(i, "day").format("Y-M-D")
+
+                        return (
+                            <rect
+                                key={i}
+                                width="22"
+                                height="22"
+                                x={(width - (i + 1) * 32).toString()}
+                                y="5"
+                                fill={!!data[day] ? "blue" : "grey"}
+                                rx="4px"
+                                onClick={() =>
+                                    toggleCheck(name, day, !data[day])
+                                }
+                            />
+                        )
+                    })}
+                </svg>
+            </div>
+        )
+    }
 }
 
-export default function ChecksCalendar({ data }) {
+export default function ChecksCalendar({
+    data,
+    addChecksCategory,
+    toggleCheck,
+}) {
     const classes = useStyles()
     return (
         <div className="checksCalendar">
             <Paper className={classes.root} elevation={3}>
                 {Object.entries(data).map(([key, value]) => (
-                    <ChecksLine name={key} data={value.data} key={key} />
+                    <ChecksLine
+                        name={key}
+                        data={value.data}
+                        key={key}
+                        classes={classes}
+                        toggleCheck={toggleCheck}
+                    />
                 ))}
                 <div className={classes.addLine}>
-                    <IconButton aria-label="addLine" style={{ flexGrow: "0" }}>
+                    <IconButton
+                        aria-label="addLine"
+                        style={{ flexGrow: "0" }}
+                        onClick={() =>
+                            addChecksCategory(
+                                prompt("Name for the new checks category? ")
+                            )
+                        }
+                    >
                         <AddIcon fontSize="small" />
                     </IconButton>
                 </div>

@@ -10,11 +10,15 @@ const useStyles = makeStyles({
     },
 })
 
-export default function Home({ data }) {
+export default function Home({ data, addChecksCategory, toggleCheck }) {
     const classes = useStyles()
     return (
         <div className="main">
-            <ChecksCalendar data={data.checks} />
+            <ChecksCalendar
+                data={data.checks}
+                addChecksCategory={addChecksCategory}
+                toggleCheck={toggleCheck}
+            />
         </div>
     )
 }
