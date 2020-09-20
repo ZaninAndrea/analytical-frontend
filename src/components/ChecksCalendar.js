@@ -5,6 +5,9 @@ import moment from "moment"
 import AddIcon from "@material-ui/icons/Add"
 
 const useStyles = makeStyles({
+    checksCalendar: {
+        margin: " 0 16px 0 0",
+    },
     root: {
         width: "100%",
         padding: "8px",
@@ -118,7 +121,7 @@ export default function ChecksCalendar({
 }) {
     const classes = useStyles()
     return (
-        <div className="checksCalendar">
+        <div className={classes.checksCalendar}>
             <Paper className={classes.root} elevation={3}>
                 {Object.entries(data).map(([key, value]) => (
                     <ChecksLine
