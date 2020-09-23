@@ -1,6 +1,10 @@
 import React, { useRef, useCallback, useState } from "react"
 import { Paper, IconButton } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
+import PlayArrowIcon from "@material-ui/icons/PlayArrow"
+import CheckIcon from "@material-ui/icons/Check"
+import CloseIcon from "@material-ui/icons/Close"
+import PauseIcon from "@material-ui/icons/Pause"
 
 function prettifyClock(clock) {
     const seconds = clock % 60
@@ -34,15 +38,19 @@ export default class TimerWidget extends React.Component {
 
     start = () => {
         this.setState({ clock: 0, phase: "RUNNING" })
-        setTimeout(() => this.updateTimer(), 1000)
+        this.timeout = setTimeout(() => this.updateTimer(), 1000)
     }
     pause = () => {
         this.setState({ phase: "PAUSED" })
-        clearTimeout(this.timeout)
+        if (this.timeout !== null) clearTimeout(this.timeout)
     }
     resume = () => {
         this.setState({ phase: "RUNNING" })
-        setTimeout(() => this.updateTimer(), 1000)
+        this.timeout = setTimeout(() => this.updateTimer(), 1000)
+    }
+    stop = () => {
+        this.setState({ phase: "STOPPED", clock: 0 })
+        if (this.timeout !== null) clearTimeout(this.timeout)
     }
 
     timerClick = () => {
@@ -60,11 +68,65 @@ export default class TimerWidget extends React.Component {
     }
 
     render() {
+        let buttons = <></>
+
+        if (this.state.phase === "STOPPED") {
+            buttons = (
+                <>
+                    <IconButton
+                        aria-label="home"
+                        style={{ color: "black" }}
+                        onClick={this.start}
+                        key="playpause"
+                    >
+                        <PlayArrowIcon fontSize="medium" />
+                    </IconButton>
+                </>
+            )
+        } else if (this.state.phase === "RUNNING") {
+            buttons = (
+                <>
+                    <IconButton
+                        aria-label="home"
+                        style={{ color: "black" }}
+                        onClick={this.pause}
+                        key="playpause"
+                    >
+                        <PauseIcon fontSize="medium" />
+                    </IconButton>
+                </>
+            )
+        } else if (this.state.phase === "PAUSED") {
+            buttons = (
+                <>
+                    <IconButton aria-label="home" style={{ color: "black" }}>
+                        <CheckIcon fontSize="medium" />
+                    </IconButton>
+                    <IconButton
+                        aria-label="home"
+                        style={{ color: "black" }}
+                        onClick={this.resume}
+                        key="playpause"
+                    >
+                        <PlayArrowIcon fontSize="medium" />
+                    </IconButton>
+                    <IconButton
+                        aria-label="home"
+                        style={{ color: "black" }}
+                        onClick={this.stop}
+                    >
+                        <CloseIcon fontSize="medium" />
+                    </IconButton>
+                </>
+            )
+        }
+
         return (
             <div className="timer">
                 <div className="timer-clock" onClick={this.timerClick}>
                     {prettifyClock(this.state.clock)}
                 </div>
+                <div className="timer-buttons">{buttons}</div>
             </div>
         )
     }
