@@ -74,7 +74,7 @@ class ChecksLine extends React.Component {
 
     componentWillUnmount() {
         if (this.resizeListener !== null) {
-            window.removeEventListener(this.resizeListener)
+            window.removeEventListener("abort", this.resizeListener)
         }
     }
 

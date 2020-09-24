@@ -4,6 +4,8 @@ import { makeStyles } from "@material-ui/core/styles"
 import Sidebar from "./components/Sidebar"
 import Home from "./pages/Home"
 import "./App.css"
+import merge from "lodash.merge"
+import moment from "moment"
 
 class App extends React.Component {
     constructor() {
@@ -33,18 +35,17 @@ class App extends React.Component {
         this.updateData()
     }
 
-    addChecksCategory = (name) => {
-        fetch("https://analytical-self.herokuapp.com/user", {
+    sendDifferentialUpdate = (update) => {
+        const newData = merge(this.state.data, update)
+
+        return fetch("https://analytical-self.herokuapp.com/user", {
             method: "PUT",
             headers: {
                 "content-type": "application/json",
                 authorization:
                     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZjY2MzQ0ZmFhNjZjZDY4MjEzOGYyYTYifQ.vT3J-uy79jdsEd_Mv3OidtQ6jwBRGAr3AGN5tmFqlr0",
             },
-            body: JSON.stringify({
-                ...this.state.data,
-                checks: { ...this.state.data.checks, [name]: { data: {} } },
-            }),
+            body: JSON.stringify(newData),
         })
             .then(() => {
                 this.updateData()
@@ -53,34 +54,24 @@ class App extends React.Component {
                 console.error(err)
             })
     }
-    toggleCheck = (category, day, value) => {
-        fetch("https://analytical-self.herokuapp.com/user", {
-            method: "PUT",
-            headers: {
-                "content-type": "application/json",
-                authorization:
-                    "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZjY2MzQ0ZmFhNjZjZDY4MjEzOGYyYTYifQ.vT3J-uy79jdsEd_Mv3OidtQ6jwBRGAr3AGN5tmFqlr0",
-            },
-            body: JSON.stringify({
-                ...this.state.data,
-                checks: {
-                    ...this.state.data.checks,
-                    [category]: {
-                        ...this.state.data.checks[category],
-                        data: {
-                            ...this.state.data.checks[category].data,
-                            [day]: value,
-                        },
-                    },
-                },
-            }),
+
+    addChecksCategory = (name) => {
+        return this.sendDifferentialUpdate({
+            [name]: { data: {}, checks: true, type: "bool" },
         })
-            .then(() => {
-                this.updateData()
-            })
-            .catch((err) => {
-                console.error(err)
-            })
+    }
+
+    toggleCheck = (category, day, value) => {
+        return this.sendDifferentialUpdate({
+            [category]: { data: { [day]: value } },
+        })
+    }
+
+    saveMeditationTime = (seconds) => {
+        const day = moment().format("Y-M-D")
+        return this.sendDifferentialUpdate({
+            Meditazione: { data: { [day]: seconds } },
+        })
     }
 
     render() {
@@ -90,7 +81,7 @@ class App extends React.Component {
             return (
                 <div className="App">
                     <Sidebar />
-                    <Home data={{ checks: {} }} />
+                    <Home data={{}} />
                 </div>
             )
 
@@ -101,6 +92,7 @@ class App extends React.Component {
                     data={data}
                     addChecksCategory={this.addChecksCategory}
                     toggleCheck={this.toggleCheck}
+                    saveMeditationTime={this.saveMeditationTime}
                 />
             </div>
         )

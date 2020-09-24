@@ -38,8 +38,8 @@ code {
     height: 100%;
     display: grid;
     grid-template-columns: auto 164px auto;
-    grid-template-rows: 16px 48px auto 32px auto 48px 16px;
-    grid-template-areas: ". . ." ". . ." ". . ." ". clock ." ". . ." ". buttons ." ". . .";
+    grid-template-rows: 32px 32px auto 32px auto 48px 16px;
+    grid-template-areas: ". . ." ". title ." ". . ." ". clock ." ". . ." ". buttons ." ". . .";
     line-height: 32px;
     font-size: 32px;
     text-align: center;
@@ -49,4 +49,8 @@ code {
 }
 .timer-buttons {
     grid-area: buttons;
+}
+.timer-title {
+    grid-area: title;
+    font-size: 32px;
 }

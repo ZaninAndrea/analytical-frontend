@@ -11,17 +11,34 @@ const useStyles = makeStyles({
     },
 })
 
-export default function Home({ data, addChecksCategory, toggleCheck }) {
-    const classes = useStyles()
+function filterObject(obj, predicate) {
+    let result = {},
+        key
 
+    for (key in obj) {
+        if (obj.hasOwnProperty(key) && !predicate(obj[key])) {
+            result[key] = obj[key]
+        }
+    }
+
+    return result
+}
+
+export default function Home({
+    data,
+    addChecksCategory,
+    toggleCheck,
+    saveMeditationTime,
+}) {
+    const classes = useStyles()
     return (
         <div className="main">
             <ChecksCalendar
-                data={data.checks}
+                data={data}
                 addChecksCategory={addChecksCategory}
                 toggleCheck={toggleCheck}
             />
-            <WidgetBoard data={data.checks} />
+            <WidgetBoard data={data} saveMeditationTime={saveMeditationTime} />
         </div>
     )
 }

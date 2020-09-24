@@ -79,7 +79,7 @@ export default class TimerWidget extends React.Component {
                         onClick={this.start}
                         key="playpause"
                     >
-                        <PlayArrowIcon fontSize="medium" />
+                        <PlayArrowIcon />
                     </IconButton>
                 </>
             )
@@ -92,15 +92,22 @@ export default class TimerWidget extends React.Component {
                         onClick={this.pause}
                         key="playpause"
                     >
-                        <PauseIcon fontSize="medium" />
+                        <PauseIcon />
                     </IconButton>
                 </>
             )
         } else if (this.state.phase === "PAUSED") {
             buttons = (
                 <>
-                    <IconButton aria-label="home" style={{ color: "black" }}>
-                        <CheckIcon fontSize="medium" />
+                    <IconButton
+                        aria-label="home"
+                        style={{ color: "black" }}
+                        onClick={() => {
+                            this.props.saveTime(this.state.clock)
+                            this.stop()
+                        }}
+                    >
+                        <CheckIcon />
                     </IconButton>
                     <IconButton
                         aria-label="home"
@@ -108,14 +115,14 @@ export default class TimerWidget extends React.Component {
                         onClick={this.resume}
                         key="playpause"
                     >
-                        <PlayArrowIcon fontSize="medium" />
+                        <PlayArrowIcon />
                     </IconButton>
                     <IconButton
                         aria-label="home"
                         style={{ color: "black" }}
                         onClick={this.stop}
                     >
-                        <CloseIcon fontSize="medium" />
+                        <CloseIcon />
                     </IconButton>
                 </>
             )
@@ -123,6 +130,7 @@ export default class TimerWidget extends React.Component {
 
         return (
             <div className="timer">
+                <div className="timer-title">{this.props.title}</div>
                 <div className="timer-clock" onClick={this.timerClick}>
                     {prettifyClock(this.state.clock)}
                 </div>
