@@ -103,7 +103,7 @@ export default class TimerWidget extends React.Component {
                         aria-label="home"
                         style={{ color: "black" }}
                         onClick={() => {
-                            this.props.saveTime(this.state.clock)
+                            this.props.saveTime(this.state.clock.toString())
                             this.stop()
                         }}
                     >
@@ -129,7 +129,7 @@ export default class TimerWidget extends React.Component {
         }
 
         return (
-            <div className="timer">
+            <div className="timerwidget">
                 <div className="timer-title">{this.props.title}</div>
                 <div className="timer-clock" onClick={this.timerClick}>
                     {prettifyClock(this.state.clock)}

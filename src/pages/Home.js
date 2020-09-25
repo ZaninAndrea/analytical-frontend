@@ -16,7 +16,7 @@ function filterObject(obj, predicate) {
         key
 
     for (key in obj) {
-        if (obj.hasOwnProperty(key) && !predicate(obj[key])) {
+        if (obj.hasOwnProperty(key) && predicate(obj[key])) {
             result[key] = obj[key]
         }
     }
@@ -29,16 +29,29 @@ export default function Home({
     addChecksCategory,
     toggleCheck,
     saveMeditationTime,
+    saveWeight,
+    saveStudyingTime,
+    saveWorkingTime,
+    saveTypingSpeed,
 }) {
     const classes = useStyles()
+    const checksData = filterObject(data, (obj) => !!obj.checks)
+
     return (
         <div className="main">
             <ChecksCalendar
-                data={data}
+                data={checksData}
                 addChecksCategory={addChecksCategory}
                 toggleCheck={toggleCheck}
             />
-            <WidgetBoard data={data} saveMeditationTime={saveMeditationTime} />
+            <WidgetBoard
+                data={data}
+                saveMeditationTime={saveMeditationTime}
+                saveWeight={saveWeight}
+                saveStudyingTime={saveStudyingTime}
+                saveWorkingTime={saveWorkingTime}
+                saveTypingSpeed={saveTypingSpeed}
+            />
         </div>
     )
 }

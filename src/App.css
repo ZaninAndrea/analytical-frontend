@@ -33,7 +33,7 @@ code {
     display: block;
 }
 
-.timer {
+.timerwidget {
     width: 100%;
     height: 100%;
     display: grid;
@@ -51,6 +51,28 @@ code {
     grid-area: buttons;
 }
 .timer-title {
+    grid-area: title;
+    font-size: 32px;
+}
+
+.floatwidget {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: auto 164px auto;
+    grid-template-rows: 32px 32px auto 56px auto 48px 16px;
+    grid-template-areas: ". . ." ". title ." ". . ." ". input ." ". . ." ". buttons ." ". . .";
+    line-height: 32px;
+    font-size: 32px;
+    text-align: center;
+}
+.float-input {
+    grid-area: input;
+}
+.float-buttons {
+    grid-area: buttons;
+}
+.float-title {
     grid-area: title;
     font-size: 32px;
 }

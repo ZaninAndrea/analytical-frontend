@@ -37,6 +37,28 @@ const useStyles = makeStyles({
     },
 })
 
+function getFill(data, day, tolerance) {
+    if (!!data[day]) return "blue"
+
+    for (let i = 0; i <= tolerance; i++) {
+        const pastDay = moment(day).subtract(i, "day").format("Y-M-D")
+
+        if (!!data[pastDay]) {
+            for (let j = 0; j <= tolerance - i + 1; j++) {
+                const futureDay = moment(day).add(j, "day")
+
+                if (
+                    !!data[futureDay.format("Y-M-D")] ||
+                    futureDay.diff(moment()) >= 0
+                )
+                    return "lightblue"
+            }
+        }
+    }
+
+    return "grey"
+}
+
 class ChecksLine extends React.Component {
     constructor() {
         super()
@@ -79,7 +101,7 @@ class ChecksLine extends React.Component {
     }
 
     render() {
-        const { classes, data, name, toggleCheck } = this.props
+        const { classes, data, name, toggleCheck, tolerance } = this.props
         const { checksCount, width } = this.state
 
         return (
@@ -100,7 +122,7 @@ class ChecksLine extends React.Component {
                                 height="22"
                                 x={(width - (i + 1) * 32).toString()}
                                 y="5"
-                                fill={!!data[day] ? "blue" : "grey"}
+                                fill={getFill(data, day, tolerance)}
                                 rx="4px"
                                 onClick={() =>
                                     toggleCheck(name, day, !data[day])
@@ -127,6 +149,9 @@ export default function ChecksCalendar({
                     <ChecksLine
                         name={key}
                         data={value.data}
+                        tolerance={
+                            value.tolerance ? parseInt(value.tolerance) : 0
+                        }
                         key={key}
                         classes={classes}
                         toggleCheck={toggleCheck}

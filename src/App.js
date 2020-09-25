@@ -57,7 +57,7 @@ class App extends React.Component {
 
     addChecksCategory = (name) => {
         return this.sendDifferentialUpdate({
-            [name]: { data: {}, checks: true, type: "bool" },
+            [name]: { data: {}, checks: true, type: "bool", tolerance: 1 },
         })
     }
 
@@ -70,7 +70,31 @@ class App extends React.Component {
     saveMeditationTime = (seconds) => {
         const day = moment().format("Y-M-D")
         return this.sendDifferentialUpdate({
-            Meditazione: { data: { [day]: seconds } },
+            Meditation: { data: { [day]: seconds } },
+        })
+    }
+    saveWeight = (weight) => {
+        const day = moment().format("Y-M-D")
+        return this.sendDifferentialUpdate({
+            Weight: { data: { [day]: weight } },
+        })
+    }
+    saveStudyingTime = (time) => {
+        const day = moment().format("Y-M-D")
+        return this.sendDifferentialUpdate({
+            "Studying (h)": { data: { [day]: time } },
+        })
+    }
+    saveWorkingTime = (time) => {
+        const day = moment().format("Y-M-D")
+        return this.sendDifferentialUpdate({
+            "Working (h)": { data: { [day]: time } },
+        })
+    }
+    saveTypingSpeed = (speed) => {
+        const day = moment().format("Y-M-D")
+        return this.sendDifferentialUpdate({
+            "Typing speed": { data: { [day]: speed } },
         })
     }
 
@@ -93,6 +117,10 @@ class App extends React.Component {
                     addChecksCategory={this.addChecksCategory}
                     toggleCheck={this.toggleCheck}
                     saveMeditationTime={this.saveMeditationTime}
+                    saveWeight={this.saveWeight}
+                    saveStudyingTime={this.saveStudyingTime}
+                    saveWorkingTime={this.saveWorkingTime}
+                    saveTypingSpeed={this.saveTypingSpeed}
                 />
             </div>
         )
