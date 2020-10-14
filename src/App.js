@@ -17,7 +17,7 @@ class App extends React.Component {
     }
 
     updateData = () => {
-        fetch("https://analytical-self.herokuapp.com/user", {
+        fetch("https://analytical.caprover.baida.dev/user", {
             method: "GET",
             headers: {
                 authorization:
@@ -38,7 +38,7 @@ class App extends React.Component {
     sendDifferentialUpdate = (update) => {
         const newData = merge(this.state.data, update)
 
-        return fetch("https://analytical-self.herokuapp.com/user", {
+        return fetch("https://analytical.caprover.baida.dev/user", {
             method: "PUT",
             headers: {
                 "content-type": "application/json",
