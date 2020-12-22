@@ -2,10 +2,12 @@ import React from "react"
 import { Paper } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import Sidebar from "./components/Sidebar"
+import Stats from "./pages/Stats"
 import Home from "./pages/Home"
 import "./App.css"
 import merge from "lodash.merge"
 import moment from "moment"
+import { BrowserRouter, Switch, Route } from "react-router-dom"
 
 class App extends React.Component {
     constructor() {
@@ -99,30 +101,35 @@ class App extends React.Component {
     }
 
     render() {
-        const { data } = this.state
+        let { data } = this.state
 
-        if (data === null)
-            return (
-                <div className="App">
-                    <Sidebar />
-                    <Home data={{}} />
-                </div>
-            )
+        if (data === null) data = {}
 
         return (
-            <div className="App">
-                <Sidebar />
-                <Home
-                    data={data}
-                    addChecksCategory={this.addChecksCategory}
-                    toggleCheck={this.toggleCheck}
-                    saveMeditationTime={this.saveMeditationTime}
-                    saveWeight={this.saveWeight}
-                    saveStudyingTime={this.saveStudyingTime}
-                    saveWorkingTime={this.saveWorkingTime}
-                    saveTypingSpeed={this.saveTypingSpeed}
-                />
-            </div>
+            <BrowserRouter>
+                <div className="App">
+                    <Sidebar />
+
+                    <Switch>
+                        <Route path="/" exact>
+                            <Home
+                                data={data}
+                                addChecksCategory={this.addChecksCategory}
+                                toggleCheck={this.toggleCheck}
+                                saveMeditationTime={this.saveMeditationTime}
+                                saveWeight={this.saveWeight}
+                                saveStudyingTime={this.saveStudyingTime}
+                                saveWorkingTime={this.saveWorkingTime}
+                                saveTypingSpeed={this.saveTypingSpeed}
+                            />
+                        </Route>
+
+                        <Route path="/stats">
+                            <Stats data={data} />
+                        </Route>
+                    </Switch>
+                </div>
+            </BrowserRouter>
         )
     }
 }

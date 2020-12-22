@@ -76,3 +76,21 @@ code {
     grid-area: title;
     font-size: 32px;
 }
+
+.stats-page {
+    grid-area: main;
+}
+
+.stats-page .graph {
+    grid-area: graph;
+    margin: 16px 0;
+    height: 48px;
+    width: calc(100vw - 59px - 32px);
+    height: calc(100vh - 48px - 48px);
+}
+.stats-page .interface {
+    grid-area: interface;
+    margin: 16px 0;
+    height: 48px;
+    width: 100%;
+}
